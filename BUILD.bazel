@@ -1,0 +1,51 @@
+load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle", "webpack_devserver")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+npm_link_all_packages(name = "node_modules")
+
+RUNTIME_DEPS = [
+    ":node_modules/react",
+    ":node_modules/react-dom",
+    ":node_modules/babel-loader",
+    ":node_modules/html-webpack-plugin",
+    ":node_modules/@babel/preset-env",
+    ":node_modules/@babel/preset-react",
+]
+
+filegroup(
+    name = "srcs",
+    srcs = glob(
+        include = [
+            "src/**/*",
+        ],
+    ),
+)
+
+filegroup(
+    name = "public",
+    srcs = glob(
+        include = [
+            "public/**/*",
+        ],
+    ),
+)
+
+SRC_FILES = [
+    ":public",
+    ":srcs",
+    "index.jsx",
+]
+
+webpack_devserver(
+    name = "start",
+    data = RUNTIME_DEPS + SRC_FILES,
+    webpack_config = ":webpack.config.js",
+)
+
+webpack_bundle(
+    name = "bundle",
+    srcs = RUNTIME_DEPS + SRC_FILES,
+    entry_point = "index.jsx",
+    output_dir = True,
+    webpack_config = ":webpack.config.js",
+)

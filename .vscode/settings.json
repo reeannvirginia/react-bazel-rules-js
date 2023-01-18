@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "bazel-bin": true,
+    "bazel-monarch": true,
+    "bazel-out": true,
+    "bazel-testlogs": true,
+    "node_modules": true
+  },
+}
